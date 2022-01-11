@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Address_Book_System
 {
@@ -59,7 +56,6 @@ namespace Address_Book_System
                         Console.WriteLine(" Zip code-->{0}", contact.ZipCode);
                         Console.WriteLine(" Phone number-->{0}", contact.PhoneNumber);
                         Console.WriteLine(" E-Mail ID-->{0}", contact.Email);
-                        break;
                     }
                     else
                     {
