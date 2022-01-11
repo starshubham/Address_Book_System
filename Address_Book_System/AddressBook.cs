@@ -12,14 +12,15 @@ namespace Address_Book_System
 
         public static void AddContact()
         {
-            Console.WriteLine(" You have to enter your details here. \n");
-            int contactsNum = 1;
+            Console.Write("How many contacts do you want to add ? : ");
+            int contactsNum = Convert.ToInt32(Console.ReadLine());
             while (contactsNum > 0)
             {
                 PersonsDetails person = new PersonsDetails();
 
+
                 Console.Write(" Enter your First name : ");
-                person.Firstname = Console.ReadLine();
+                person.FirstName = Console.ReadLine();
                 Console.Write(" Enter your Last name : ");
                 person.LastName = Console.ReadLine();
                 Console.Write(" Enter your Address : ");
@@ -28,15 +29,15 @@ namespace Address_Book_System
                 person.City = Console.ReadLine();
                 Console.Write(" Enter your State : ");
                 person.State = Console.ReadLine();
-                Console.Write(" Enter your Zip code : ");
+                Console.Write(" Enter your Zip Code : ");
                 person.ZipCode = Console.ReadLine();
-                Console.Write(" Enter your Phone number : ");
+                Console.Write(" Enter your Phone Number : ");
                 person.PhoneNumber = Console.ReadLine();
-                Console.Write(" Enter your Email ID : ");
+                Console.Write(" Enter your Email-ID : ");
                 person.Email = Console.ReadLine();
 
                 addressBook.Add(person);
-                Console.WriteLine("\n {0}'s contact succesfully added", person.Firstname);
+                Console.WriteLine("\n {0}'s contact succesfully added", person.FirstName);
                 contactsNum--;
             }
         }
@@ -48,9 +49,9 @@ namespace Address_Book_System
                 string nameKey = Console.ReadLine();
                 foreach (PersonsDetails contact in addressBook)
                 {
-                    if (nameKey.ToLower() == contact.Firstname.ToLower())
+                    if (nameKey.ToLower() == contact.FirstName.ToLower())
                     {
-                        Console.WriteLine(" First name-->{0}", contact.Firstname);
+                        Console.WriteLine("\n First name-->{0}", contact.FirstName);
                         Console.WriteLine(" Last name-->{0}", contact.LastName);
                         Console.WriteLine(" Address-->{0}", contact.Address);
                         Console.WriteLine(" City-->{0}", contact.City);
@@ -62,13 +63,48 @@ namespace Address_Book_System
                     }
                     else
                     {
-                        Console.WriteLine("\n Contact of the person {0} does not exist", nameKey);
+                        Console.WriteLine(" Contact of the person {0} does not exist", nameKey);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine(" Your address book is empty");
+            }
+        }
+
+        public static void Delete()
+        {
+            Console.Write("\n Enter the first name of the person whose contact you want to delete from the addressbook : ");
+            string deleteKey = Console.ReadLine();
+            int flag = 0;
+            if (addressBook.Count > 0)
+            {
+                foreach (PersonsDetails person in addressBook)
+                {
+                    if (deleteKey.ToLower() == person.FirstName.ToLower())
+                    {
+                        Console.Write("\n Do You Want To Delete This Contact press Y : ");
+                        char ch = Convert.ToChar(Console.ReadLine());
+
+                        if (ch == 'Y' || ch == 'y')
+                        {
+                            flag = 1;
+                            addressBook.Remove(person);
+                            Console.WriteLine(" Contact is Deleted.");
+                            break;
+                        }
                     }
                 }
             }
             else
             {
                 Console.WriteLine("Your address book is empty");
+            }
+
+            if (flag == 0)
+            {
+                Console.WriteLine("contact of the person {0} does not exist", deleteKey);
             }
         }
 
@@ -80,7 +116,7 @@ namespace Address_Book_System
             {
                 foreach (PersonsDetails persons in addressBook)
                 {
-                    if (editKey.ToLower() == persons.Firstname.ToLower())
+                    if (editKey.ToLower() == persons.FirstName.ToLower())
                     {
                         Console.WriteLine("\n Enter the key number for editing the details." +
                             "\n1.First Name " +
@@ -97,7 +133,7 @@ namespace Address_Book_System
                         {
                             case 1:
                                 Console.Write("Enter the new First Name : ");
-                                persons.Firstname = Console.ReadLine();
+                                persons.FirstName = Console.ReadLine();
                                 break;
                             case 2:
                                 Console.WriteLine("Enter the new Last name");

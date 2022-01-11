@@ -8,10 +8,10 @@ namespace Address_Book_System
         {
             Console.WriteLine("Welcome to Address Book Program \n");
 
-            // UC3 : Ability to edit existing contact person using their name
+            // UC4 : Ability to delete a person using person's name
             AddressBook.AddContact();
             AddressBook.Display();
-            AddressBook.Edit();
+            AddressBook.Delete();
             AddressBook.Display();
         }
     }
