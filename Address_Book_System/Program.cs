@@ -8,8 +8,10 @@ namespace Address_Book_System
         {
             Console.WriteLine("Welcome to Address Book Program \n");
 
-            // UC2 : Ability to add a new Contact to Address Book
+            // UC3 : Ability to edit existing contact person using their name
             AddressBook.AddContact();
+            AddressBook.Display();
+            AddressBook.Edit();
             AddressBook.Display();
         }
     }
