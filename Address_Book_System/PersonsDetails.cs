@@ -4,6 +4,7 @@ namespace Address_Book_System
 {
     class Person
     {
+        private string fname, lname, address, city, state, phone, zip, email; //Declaring (Creating) Variables
         public Person(String fname, String lname, String address, String city, String state, String phone, String zip, string email)
         {                                                   //Parameterize constructor
             this.FirstName = fname;
@@ -16,15 +17,15 @@ namespace Address_Book_System
             this.Email = email;
         }
 
-        public string FirstName { get; set; }         // get method returns the value of the variable FirstName.
+        public string FirstName { get => fname; set => fname = value; }         // get method returns the value of the variable FirstName.
                                                       // set method assigns a value to the name variable.
-        public string LastName { get; set; }
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string PhoneNo { get; set; }
-        public string ZipCode { get; set; }
-        public string Email { get; set; }
+        public string LastName { get => lname; set => lname = value; }
+        public string Address { get => address; set => address = value; }
+        public string City { get => city; set => city = value; }
+        public string State { get => state; set => state = value; }
+        public string PhoneNo { get => phone; set => phone = value; }
+        public string ZipCode { get => zip; set => zip = value; }
+        public string Email { get => email; set => email = value; }
         public override string ToString() //Tostring  method to store value
         {
             return "FirstName:- " + FirstName + "\nLastName:- " + LastName + " \nAddress:- " + Address + " \nCity:- " + City
