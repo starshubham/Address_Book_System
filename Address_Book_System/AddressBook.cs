@@ -33,7 +33,7 @@ namespace Address_Book_System
         String fname = null; //empty string
         String  lname, address, city, state, phone, zip, email; //Declaring (Creating) Variables
 
-        public void AddRecord() //Addidng Record method
+        public void AddRecord() //Addidng new person without duplication
         {
             int i = 0;
             while (i == 0) // Checking name exixt or not
