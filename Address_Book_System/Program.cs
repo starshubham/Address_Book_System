@@ -3,14 +3,12 @@ using System.Collections.Generic;
 
 namespace Address_Book_System
 {
-    /* UC7:- Ability to ensure there is no Duplicate Entry of the same Person in a particular Address Book
-             - Duplicate Check is done on Person Name while adding person to Address Book.
-             - Use Collection Methods to Search Person by Name for Duplicate Entry
-             - Override equals method to check for Duplicate
-             - Use Lambda
+    /* UC8:- Ability to search Person in a City or State across the multiple Address Book
+             - Search Result can show multiple person in the city or state
      */
     class Program
     {
+        
         //create Dictionary for AddressBook
         static Dictionary<String, AddressBook> addressBookDictionary = new Dictionary<string, AddressBook>();
 
@@ -21,12 +19,12 @@ namespace Address_Book_System
             while (loop1)  //While loop to adding number of Address book system
             {
                 Console.WriteLine("**** Welcome To Address Book System ****");
-                Console.WriteLine("\n1.Add Address Book System\n2.Show Address Books System Names\n3.Exit "); //Print menu
+                Console.WriteLine("\n1.Add Address Book System\n2.Show Address Books System Names\n3.Search Person in City or State\n4.Exit "); //Print menu
 
                 Console.Write("Enter Your Choice:- "); //Take input
                 int choice1 = Convert.ToInt32(Console.ReadLine()); //take input user and store choice1 veriable
 
-                while (choice1 > 3)//Check input is greater or not
+                while (choice1 > 4)//Check input is greater or not
                 {
                     Console.WriteLine("Plz Enter Valid Option"); //print 
                     Console.Write("Enter Your Choice:-");  //take input
@@ -36,6 +34,9 @@ namespace Address_Book_System
 
                 AddressBook addressBook = new AddressBook(); //Creating Object of AddressBook
                 string addressBookName = null; // addressBookName empty or null
+
+                AddressBook edit = new AddressBook();  //Create object of AddressBook class
+
                 switch (choice1)  //switch Case
                 {
                     case 1:
@@ -61,7 +62,7 @@ namespace Address_Book_System
                         }
                         bool loop2 = true;
                         Console.WriteLine("**** Welcome To Address Book System ****");
-                        AddressBook edit = new AddressBook();  //Create object of AddressBook class
+                        //AddressBook edit = new AddressBook();  //Create object of AddressBook class
                         while (loop2)
                         {
                             Console.WriteLine("\n1. Add New Person      ");
@@ -107,7 +108,9 @@ namespace Address_Book_System
                             Console.WriteLine("Address Book System Name:- " + keyValue.Key); //print 
                         }
                         break;
-
+                    case 3:
+                        edit.SearchRecordCityOrState(); 
+                        break;
                     default:
                         loop1 = false;
                         break;

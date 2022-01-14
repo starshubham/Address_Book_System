@@ -18,7 +18,7 @@ namespace Address_Book_System
         }
 
         public string FirstName { get => fname; set => fname = value; }         // get method returns the value of the variable FirstName.
-                                                      // set method assigns a value to the name variable.
+                                                                                // set method assigns a value to the name variable.
         public string LastName { get => lname; set => lname = value; }
         public string Address { get => address; set => address = value; }
         public string City { get => city; set => city = value; }
