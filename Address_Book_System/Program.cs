@@ -3,120 +3,138 @@ using System.Collections.Generic;
 
 namespace Address_Book_System
 {
-    /* UC8:- Ability to search Person in a City or State across the multiple Address Book
-             - Search Result can show multiple person in the city or state
-     */
+    public interface IAddressBook
+    {
+        void ViewAllAddressBooks();
+        void DeleteAddressBook();
+    }
     class Program
     {
-        
-        //create Dictionary for AddressBook
-        static Dictionary<String, AddressBook> addressBookDictionary = new Dictionary<string, AddressBook>();
+
+        // Constants
+        public const string TO_ADD_OR_ACCESS = "a";
+        public const string TO_VIEW_ALL_ADDRESSBOOKS = "view";
+        public const string TO_DELETE_ADDRESS_BOOK = "delete";
+        public const string SEARCH_PERSON_IN_CITY = "city";
+        public const string SEARCH_PERSON_IN_STATE = "state";
+        public const string VIEW_ALL_IN_CITY = "vcity";
+        public const string VIEW_ALL_IN_STATE = "vstate";
+        public const string COUNT_ALL_IN_CITY = "ccity";
+        public const string COUNT_ALL_IN_STATE = "cstate";
+        public const string EXIT = "e";
 
         static void Main(string[] args)
-        {
-            bool loop1 = true; //Boolean Value True Or False
-
-            while (loop1)  //While loop to adding number of Address book system
+        { /* UC6:- Refactor to add multiple Address Book to the System.
+                 Each Address Book has a unique Name 
+                 - Use Console to add new Address Book 
+                 - Maintain Dictionary of Address Book Name to Address Book
+         */
+            Console.WriteLine("**** Welcome To Address Book System ****");
+            AddressBookDetails addressBookDetails = new AddressBookDetails();
+            bool flag = true;
+            while (flag)
             {
-                Console.WriteLine("**** Welcome To Address Book System ****");
-                Console.WriteLine("\n1.Add Address Book System\n2.Show Address Books System Names\n3.Search Person in City or State\n4.Exit "); //Print menu
+                Console.Write("\n1.Add Address Book System" +
+                                  "\n2.Show Address Book System Name" +
+                                  "\n3.Delete Address Book" +
+                                  "\n4.Search Person in City or State " +
+                                  "\n5.Show all Record in City or State" +
+                                  "\n6.Count of Record City or State" +
+                                  "\n7.Exit\nEnter Your Choice: - ");
 
-                Console.Write("Enter Your Choice:- "); //Take input
-                int choice1 = Convert.ToInt32(Console.ReadLine()); //take input user and store choice1 veriable
-
-                while (choice1 > 4)//Check input is greater or not
-                {
-                    Console.WriteLine("Plz Enter Valid Option"); //print 
-                    Console.Write("Enter Your Choice:-");  //take input
-                    choice1 = Convert.ToInt32(Console.ReadLine()); //store choice1
-                }
-
-
-                AddressBook addressBook = new AddressBook(); //Creating Object of AddressBook
-                string addressBookName = null; // addressBookName empty or null
-
-                AddressBook edit = new AddressBook();  //Create object of AddressBook class
-
-                switch (choice1)  //switch Case
+                int choice = Convert.ToInt32(Console.ReadLine());
+                switch (choice)
                 {
                     case 1:
-
-                        Console.Write("Enter Address Book System Name:- "); //take input user side
-
-                        addressBookName = Console.ReadLine();  //Store name addressBookName
-
-                        bool isKeyAvailable = false; // true if a key press is available; otherwise, false.
-
-                        foreach (KeyValuePair<string, AddressBook> keyValue in addressBookDictionary) //Iterating dictionary  displayed
-                        {
-                            if (keyValue.Key.Equals(addressBookName)) //Check Addressbook name exixt or not
-                            {
-                                isKeyAvailable = true; //value is present
-                            }
-                        }
-                        if (isKeyAvailable) //value is present print message
-                        {
-                            Console.WriteLine($"Address Book System {addressBookName} is Already Exist\n Please Enter New Address Book Name:-");
-                            addressBookName = Console.ReadLine();//Take input user
-
-                        }
-                        bool loop2 = true;
-                        Console.WriteLine("**** Welcome To Address Book System ****");
-                        //AddressBook edit = new AddressBook();  //Create object of AddressBook class
-                        while (loop2)
-                        {
-                            Console.WriteLine("\n1. Add New Person      ");
-                            Console.WriteLine("2. Display Records     ");
-                            Console.WriteLine("3. Edit Records        ");
-                            Console.WriteLine("4. Delete Records      ");
-                            Console.WriteLine("5. Exit		        \n");
-                            Console.Write("Enter Your Choice:- ");
-                            int choice = Convert.ToInt32(Console.ReadLine());
-                            switch (choice)
-                            {
-                                case 1:
-                                    edit.AddRecord(); //call AddRecord Method
-                                    break;
-                                case 2:
-                                    edit.DisplayRecord();  //call DisplayRecord Method
-                                    break;
-                                case 3:
-                                    Console.Write("Enter First Name To Edit Records:- ");
-                                    String firstName = Console.ReadLine();
-                                    edit.EditRecord(firstName); //call Edit record method
-                                    break;
-                                case 4:
-                                    Console.Write("Enter First Name To Delete Records:- ");
-                                    String Name = Console.ReadLine();
-                                    edit.DeleteRecord(Name); //call Delete record method
-                                    break;
-                                case 5:
-                                    loop2 = false;
-                                    break;
-                                default:
-                                    Console.WriteLine("Enter Valid Option");
-                                    break;
-                            }
-                        }
-                        addressBookDictionary.Add(addressBookName, addressBook);//Addrees book add Name
+                        addressBookDetails.AddAddressBook(); // add new Address book
                         break;
+
                     case 2:
-                        Console.WriteLine(" Available Address Books System ");
+                        addressBookDetails.ViewAllAddressBooks(); //view all address book names
+                        break;
 
-                        foreach (KeyValuePair<String, AddressBook> keyValue in addressBookDictionary) //Iterating
+                    case 3:
+                        addressBookDetails.DeleteAddressBook(); //delete an address book
+                        break;
+
+                    case 4:
+                        try
+                        { /* UC8:- Ability to search Person in a City or State across the multiple AddressBook
+                                   - Search Result can show multiple person in the city or state
+                          */
+                            Console.Write("1.City\n2.State\nEnter Choice:-"); //print 
+                            int choice2 = Convert.ToInt32(Console.ReadLine()); //take input and convert int32
+                            if (choice2 == 1) //check condition
+                            {
+                                addressBookDetails.SearchInCity(); //search city
+                            }
+                            else if (choice2 == 2)
+                            {
+                                addressBookDetails.SearchInState();//search State
+                            }
+                        }
+                        catch (Exception ex)
                         {
-                            Console.WriteLine("Address Book System Name:- " + keyValue.Key); //print 
+                            Console.WriteLine(ex.Message);
                         }
                         break;
-                    case 3:
-                        edit.SearchRecordCityOrState(); 
+
+                    case 5:
+                        try
+                        {/* UC9:- Ability to view Persons by City or State
+                                  - Maintain Dictionary of City and Person as well as State and Person
+                                  - Use Collection Library to maintain
+                          */
+                            Console.Write("1.City\n2.State\nEnter Choice:-"); //print
+                            int choice3 = Convert.ToInt32(Console.ReadLine()); //take input and convert int32
+                            if (choice3 == 1)
+                            {
+                                addressBookDetails.ViewAllByCity();  //  view all contact in a city
+                            }
+                            else if (choice3 == 2)
+                            {
+                                addressBookDetails.ViewAllByState();  // view all contact in a State
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                        break;
+
+                    case 6:
+                        try
+                        {     /* UC10:- Ability to get number of contact persons i.e. count by City or State.
+                                       - Search Result will show count by city and by state.
+                             */
+                            Console.Write("1.City\n2.State\nEnter Choice:-"); //print
+                            int choice4 = Convert.ToInt32(Console.ReadLine()); //take input and convert int32
+                            if (choice4 == 1)
+                            {
+                                addressBookDetails.CountAllByCity(); //get count of contacts in City
+                            }
+                            else if (choice4 == 2)
+                            {
+                                addressBookDetails.CountAllByState(); //get count of contacts in state
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                        break;
+
+                    case 7:
+
+                        flag = false;
                         break;
                     default:
-                        loop1 = false;
+                        Console.WriteLine("Please Enter Valid Option");
                         break;
                 }
-
             }
+
         }
     }
 }

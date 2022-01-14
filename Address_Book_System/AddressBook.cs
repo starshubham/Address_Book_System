@@ -1,274 +1,318 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Address_Book_System
 {
     class AddressBook
     {
-        public static bool PhoneNumberValidation(String phone)
+        // Constants
+        private const int UPDATE_FIRST_NAME = 1;
+        private const int UPDATE_LAST_NAME = 2;
+        private const int UPDATE_ADDRESS = 3;
+        private const int UPDATE_CITY = 4;
+        private const int UPDATE_STATE = 5;
+        private const int UPDATE_ZIP = 6;
+        private const int UPDATE_PHONE_NUMBER = 7;
+        private const int UPDATE_EMAIL = 8;
+        private const string PERSON_NAME = "name";
+        private const string CITY = "city";
+        private const string STATE = "state";
+        private const string ZIP = "zip";
+
+        // Variables
+        private string firstName;
+        private string lastName;
+        private string address;
+        private string city;
+        private string state;
+        private string zip;
+        private string phoneNumber;
+        private string email;
+        public string nameOfAddressBook = " ";
+
+        public List<ContactDetails> contactList = new List<ContactDetails>();
+        public AddressBook(string name)
         {
-            String PPattern = @"^\+?\d{0,2}\-?\d{4,5}\-?\d{5,6}"; //Define Phone Number Pattern
-            Regex Pregex = new Regex(PPattern); //create object of the Regex class (its Regesx predefine class)
-            return Pregex.IsMatch(phone);
+            nameOfAddressBook = name;
         }
-        public static bool EmailValidation(String email)
+        /*UC7:- Ability to ensure there is no Duplicate Entry of the same Person in a particular Address Book
+                        - Duplicate Check is done on Person Name while adding person to Address Book. 
+                        - Use Collection Methods to Search Person by Name for Duplicate Entry.
+                        - Override equals method to check for Duplicate.
+                */
+        public void AddContact() //Create AddContact method to add Record
         {
-            String Epattern = @"^[a-z]+([-+*.]?[0-9a-z])*@[a-z0-9]+\.(\.?[a-z]{2,}){1,2}$"; //Define Email Pattern
-            Regex eregex = new Regex(Epattern); //create object of the Regex class (its Regex predefine class)
-            return eregex.IsMatch(email);
-
-        }
-        public static bool ZipValidation(String zip)  //Zip Method
-        {
-            String ZPattern = "^[0-9]{6}(?:-[0-9]{6})?$";  //Define Zip Code Pattern
-            Regex Zregex = new Regex(ZPattern); //create object of the Regex class (its Regesx predefine class)
-            return Zregex.IsMatch(zip);
-        }
-
-        private readonly Person person;
-
-        List<Person> list = new List<Person>(); //create a list of Person objects
-
-        String fname = null; //empty string
-        String  lname, address, city, state, phone, zip, email; //Declaring (Creating) Variables
-
-        public void AddRecord() //Addidng new person without duplication
-        {
-            int i = 0;
-            while (i == 0) // Checking name exixt or not
+            Console.Write("Enter First Name:- "); //Take input
+            firstName = Console.ReadLine(); //Store firstname           
+            Console.Write("Enter Last Name:- ");//Take input
+            lastName = Console.ReadLine();
+            Console.Write("Enter The Address:- ");//Take input
+            address = Console.ReadLine();
+            Console.Write("Enter City:- ");//Take input
+            city = Console.ReadLine();
+            Console.Write("Enter State:- ");//Take input
+            state = Console.ReadLine();
+            Console.Write("Enter Zip Code:- ");//Take input
+            zip = Console.ReadLine();
+            Console.Write("Enter Phone Number:- ");//Take input
+            phoneNumber = Console.ReadLine();
+            Console.Write("Enter Email:- ");//Take input
+            email = Console.ReadLine();
+            // Creating an instance of contact with given details
+            ContactDetails addNewContact = new ContactDetails(firstName, lastName, address, city, state, zip, phoneNumber, email, nameOfAddressBook);
+            while (addNewContact.Equals(contactList))
             {
-                Console.Write("Enter First Name:- "); //take input user First name
-                this.fname = Console.ReadLine();      //Store input fname            
-                if (CheckExist(fname))     //Checking for duplicates firstname or user input are same or not
+                Console.WriteLine("contact already exists");
+                // Giving option to user to re enter or to exit
+                Console.Write("1.Enter New Name\n0.Exit\nEnter Choice:- ");
+                int opt = Convert.ToInt32(Console.ReadLine());
+                if (opt == 1)
                 {
-                    Console.WriteLine($"Record with name { fname } Already Exist\n Please Enter New name:-");//print name Already Exist
+                    Console.WriteLine("Enter new First name");
+                    firstName = Console.ReadLine();
+                    Console.WriteLine("Enter new Last name");
+                    lastName = Console.ReadLine();
+                    addNewContact = new ContactDetails(firstName, lastName, address, city, state, zip, phoneNumber, email, nameOfAddressBook);
                 }
                 else
-                {
-                    i = 1;
-                }
+                    return;
             }
-            Console.Write("Enter Last Name:- ");  //Take input user
-            lname = Console.ReadLine();           //Store input for lname
-            Console.Write("Enter Address:- ");  //Take input user
-            address = Console.ReadLine();       //Store input for address
-            Console.Write("Enter City:- ");    //Take input user
-            city = Console.ReadLine();         //Store input for city
-            Console.Write("Enter State:- ");   //Take input user
-            state = Console.ReadLine();        //Store input for state
 
-            Console.Write("Enter Zip:- ");    //Take input user
-            zip = Console.ReadLine();         //Store input for zip
-            //while (!ZipValidation(zip))
-            //{
-            //    Console.Write(zip + " is Invalid Zip Code \nPlease Enter Valid Zip:- ");
-            //    zip = Console.ReadLine();
-            //}
-
-            Console.Write("Enter Phone Number:- "); //Take input user
-            phone = Console.ReadLine();           //Store input for phone
-            //while (!PhoneNumberValidation(phone))
-            //{
-            //    Console.Write(phone + " is Invalid Phone Number \nPlease Enter Valid Number:- ");
-            //    phone = Console.ReadLine();
-            //}
-
-            Console.Write("Enter Email:- ");  //Take input user
-            email = Console.ReadLine();           //Store input for email
-            //while (!EmailValidation(email))
-            //{
-            //    Console.Write(email + " is Invalid Email \nPlease Enter Valid Email:- ");
-            //    email = Console.ReadLine();
-            //}
-
-            Person person = new Person(fname, lname, address, city, state, phone, zip, email);
-            list.Add(person);   //adding list data person
+            contactList.Add(addNewContact);  // Adding the contact to list           
+            AddressBookDetails.AddToCityDictionary(city, addNewContact); // Adding contact to city dictionary           
+            AddressBookDetails.AddToStateDictionary(state, addNewContact);  // Adding contact to state dictionary
+            Console.WriteLine("\nContact Added successfully");
         }
-        public void DisplayRecord()  //Display Record Method
+
+        public void SearchContactDetails() //create Search record method
         {
-            if (list.Count == 0) //Check list ==0
+            try
             {
-                Console.WriteLine(" No Records Found"); //print record not found
-            }
-            else
-            {
-                foreach (Person k in list)
+                if (contactList.Count() == 0) //List doesnt have any contacts
                 {
-                    Console.WriteLine(k);
+                    Console.WriteLine("No Record Found"); //print msg
+                    return;
                 }
+                Console.WriteLine("\nEnter the name of candidate to get Details");
+                string name = Console.ReadLine().ToLower();
+
+                ContactDetails contact = SearchByName(name);  // Search the contact by name          
+                if (contact == null)  // If contact doesnt exist
+                {
+                    Console.WriteLine("No record found");
+                    return;
+                }
+                contact.Display();// Print the details of the contact after search
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
-        public void EditRecord(String fname) // EditRecord Method 
+
+        public void EditContact() //Create EditContact method to edite record
         {
-            for (int k = 0; k < list.Count; k++) // Value  present or not
+            try
             {
-                if (list[k].FirstName.Equals(fname))
+                if (contactList.Count() == 0) //List have no contacts
                 {
-                    Person person = list[k];
-                    Console.WriteLine(person);  //Print person
+                    Console.WriteLine(" Record Not Found"); //print
+                    return;
+                }
+                Console.Write("Enter First Name :- "); //Take First Name
+                string name = Console.ReadLine();
+                ContactDetails contact = SearchByName(name);   // Search the name
 
-                    while (k == 0)  // k==0 to edite contact
-                    {
-                        Console.WriteLine("What Do You Want to edit Contact Details \n"
-                                + "1. Address\n"
-                                + "2. city\n"
-                                + "3. State\n"
-                                + "4. Zip Code\n"
-                                + "5. Phone\n"
-                                + "6. Email\n"
-                                + "7. Save And Exit\n");
+                if (contact == null)// If contact doesnt exist
+                {
+                    Console.WriteLine($"{name } Record Not Found");//Print
+                    return;
+                }
 
-                        int choice = Convert.ToInt32(Console.ReadLine());  //convert string and store choice
-                        switch (choice)  //case 
+                contact.Display();  //  print record of searched contact
+
+                int updateAttributeNum = 0;
+                Console.Write("Enter Row number Record to be Edit:- "); //print and take input 
+                try
+                {
+                    updateAttributeNum = Convert.ToInt32(Console.ReadLine());
+                    if (updateAttributeNum == 0)
+                        return;
+                }
+                catch
+                {
+                    Console.WriteLine("Invalid entry");
+                    return;
+                }
+                Console.Write("Enter the New Record:- ");// Take input 
+                string newValue = Console.ReadLine();
+                switch (updateAttributeNum)   // Updating selected attribute with selected value
+                {
+                    case UPDATE_FIRST_NAME:
+                        firstName = contact.FirstName;  // Store the firstname of contact in variable                   
+                        contact.FirstName = newValue; // Update the contact with given name                   
+                        if (contact.Equals(contactList)) // If duplicate contact exists with that name then revert the operation
                         {
-                            case 1:
-                                Console.Write("Enter new Address:-  ");  //Take input user
-                                String address = Console.ReadLine();   //store address veriable
-                                person.Address = address;  //store class of person address data
-                                break;
-                            case 2:
-                                Console.Write("Enter new City:- "); //Take input user
-                                String city = Console.ReadLine();  //store city veriable
-                                person.City = city;                 //store class of person city data
-                                break;
-                            case 3:
-                                Console.Write("Enter new State:- "); //Take input user
-                                String state = Console.ReadLine();   //store state veriable
-                                person.State = state;               //store class of person state data
-                                break;
-                            case 4:
-                                Console.Write("Enter new Phone:- "); //Take input user
-                                String phone = Console.ReadLine();   //store phone veriable
-                                while (!PhoneNumberValidation(phone))
-                                {
-                                    Console.Write(phone + " is Invalid Phone Number \nPlease Enter Valid Number:- ");
-                                    phone = Console.ReadLine();
-                                }
-                                person.PhoneNo = phone;                 //store class of person phone data
-                                break;
-                            case 5:
-                                Console.Write("Enter new Zip Code:- "); //Take input user
-                                String zip = Console.ReadLine();        //store zip veriable
-                                while (!ZipValidation(zip))
-                                {
-                                    Console.Write(zip + " is Invalid Zip Code \nPlease Enter Valid Zip:- ");
-                                    zip = Console.ReadLine();
-                                }
-                                person.ZipCode = zip;                       //store class of person zip data
-                                break;
-                            case 6:
-                                Console.Write("Enter new Email:- "); //Take input user
-                                String email = Console.ReadLine();
-                                while (!EmailValidation(email))
-                                {
-                                    Console.Write(email + " is Invalid Email \nPlease Enter Valid Email:- ");
-                                    email = Console.ReadLine();
-                                }//store email veriable
-                                person.Email = email;                       //store class of person Email data
-                                break;
-                            case 7:
-                                k = 1;
-                                break;
-                            default:
-                                Console.WriteLine("Please Enter Valid Option");
-                                break;
+                            contact.FirstName = firstName;
+                            Console.Write($"Contact already exists that{ contact.FirstName} Name");
+                            return;
                         }
-                        foreach (Person t in list) //automate the reading  t of person of class
+                        break;
+                    case UPDATE_LAST_NAME:
+                        lastName = contact.LastName;// Store the LastName of given contact in variable                    
+                        contact.LastName = newValue;// Update the contact with given name                   
+                        if (contact.Equals(contactList)) // If duplicate contact exists with that name then revert the operation
                         {
-                            Console.WriteLine(t);//print list
+                            contact.LastName = lastName;
+                            Console.WriteLine($"Contact already exists with that {contact.LastName} name");
+                            return;
                         }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"{fname} Name of Record Not Found "); //Print Record not found
+                        break;
+                    case UPDATE_ADDRESS:
+                        contact.Address = newValue;
+                        break;
+                    case UPDATE_CITY:
+                        AddressBookDetails.cityToContactMap[contact.City].Remove(contact);// Remove the contact from city dictionary                        
+                        contact.City = newValue;// Update the contact city                        
+                        AddressBookDetails.AddToCityDictionary(contact.City, contact);// Add to city dictionary
+                        break;
+                    case UPDATE_STATE:
+                        AddressBookDetails.stateToContactMap[contact.State].Remove(contact);// Remove the contact from state dictionary
+                        contact.State = newValue;  // Update the contact state   
+                        AddressBookDetails.AddToStateDictionary(contact.State, contact);// Add to state dictionary
+                        break;
+                    case UPDATE_ZIP:
+                        contact.Zip = newValue;
+                        break;
+                    case UPDATE_PHONE_NUMBER:
+                        contact.PhoneNumber = newValue;
+                        break;
+                    case UPDATE_EMAIL:
+                        contact.Email = newValue;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid Entry");
+                        return;
                 }
             }
-        }
-        public void DeleteRecord(string firstName)  //Delete Record Method
-        {
-            for (int i = 0; i < list.Count; i++)   //Check record present or not
+            catch (Exception ex)
             {
-                if (list[i].FirstName.Equals(firstName))  //Check list of record and user inpute same or not
+                Console.WriteLine(ex.Message);
+            }
+            Console.WriteLine("Record Successfully Edit and Updated ");
+        }
+
+        public void RemoveContact()
+        {
+            try
+            {
+                if (contactList.Count() == 0)  // If the List does not have any contacts
                 {
-                    list.Remove(this.person); //Remove Record from Person class
-                    Console.WriteLine($"{firstName} Name of Record Delete Successfully"); //Print Record Delete
+                    Console.WriteLine("Record Not Found");
+                    return;
                 }
-                else
+                Console.Write("Enter Name of contact to be Removed:- ");
+                string name = Console.ReadLine();
+                ContactDetails contact = SearchByName(name); // Search for the contact            
+                if (contact == null)// If contact doesnt exist
                 {
-                    Console.WriteLine($"{firstName} Name of Record Not Found "); //Print Record not found
+                    Console.WriteLine("No record found");
+                    return;
                 }
+                contact.Display();// Print the details of contact 
+
+                contactList.Remove(contact);
+                AddressBookDetails.cityToContactMap[contact.City].Remove(contact); //remove city from Dictionary
+                AddressBookDetails.stateToContactMap[contact.State].Remove(contact);  //remove State from Dictionary
+                Console.WriteLine("Successfully Record Deleted"); //print                 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
-        public bool CheckExist(string fname)  //Check exist method
+
+        /* UC11:- Ability to sort the entries in the address book alphabetically by Person’s name.
+                   - Use Console to sort person details by name.
+                   - Use Collection Library for Sorting.
+                   - Override toString method to finally Print Person Entry in Concole.
+                   - Use Lambda Expression.
+
+           UC12:- Ability to sort the entries in the address book by City, State, or Zip
+                   - Write functions to sort person by City, State or Zip
+                   - Use Collection Library for Sorting
+        */
+        public void GetAllContacts()
         {
-            int flag = 0;
-            foreach (Person person in list) //Check list of class person
+            if (contactList.Count() == 0) //List does not have any contacts
             {
-                if (person.FirstName.Equals(fname)) //check first name and user input are equal or not
-                {
-                    flag = 1;
+                Console.WriteLine("No Contacts Found");
+                return;
+            }
+            List<ContactDetails> listForSorting = null;
+            Console.WriteLine("Select the Sorting Record\n1.Name\n2.City\n3.State\n4.Zip");//Print 
+            int op = Convert.ToInt32(Console.ReadLine()); //take input
+            switch (op)
+            {
+                case 1:
+                    listForSorting = contactList.OrderBy(contact => (contact.FirstName + contact.LastName)).ToList(); //sort Name wise using lambda Expression
                     break;
-                }
+                case 2:
+                    listForSorting = contactList.OrderBy(contact => contact.City).ToList(); //Sorting city sing lambda Expression
+                    break;
+                case 3:
+                    listForSorting = contactList.OrderBy(contact => contact.Zip).ToList(); //Sorting zip code sing lambda Expression
+                    break;
+                case 4:
+                    listForSorting = contactList.OrderBy(contact => contact.State).ToList(); //Sorting State sing lambda Expression
+                    break;
+                default:
+                    listForSorting = contactList;
+                    break;
             }
-            if (flag == 1)
-            {
-                return true;
-            }
-            return false;
+
+            listForSorting.ForEach(contact => contact.Display()); // Display all contact details in list
         }
 
-        public void SearchRecordCityOrState()  //SearchRecordCityOrState Record Method
+        private ContactDetails SearchByName(string name)
         {
-            /* UC8:- Ability to search Person in a City or State across the multiple AddressBook
-                     - Search Result can show multiple person in the city or state
-            */
-            Console.WriteLine("1.City\n2.State\nEnter Choice:-");
-
-            int choice2 = Convert.ToInt32(Console.ReadLine());
-            if (choice2 == 1)
+            if (contactList.Count == 0)   // If the list is empty
+                return null;
+            int numOfContactsSearched = 0;
+            int numOfConatctsWithNameSearched = 0; // storing the count of contacts with searched name string
+            foreach (ContactDetails contact in contactList) // Search if Contacts have the given string in name
             {
-                int count = 0;
-                Console.WriteLine("Searching contact by City");
-                Console.WriteLine("Enter City Name:-");
-                string city = Console.ReadLine();
+                numOfContactsSearched++;  // Incrementing the no of contacts searched
 
-                for (int i = 0; i < list.Count; i++)   //Cheack record present or not
-                {
-                    if (list[i].City.Equals(city))  //Cheack list of record and user inpute same or not
-                    {
-                        count++;
-                        Console.WriteLine($"Name:- { list[i].FirstName} City:- { list[i].City} ");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{city} City Name of Record Not Found "); //Print Record not found
-                    }
-                }
-                Console.WriteLine($"\nNumber of contact in the city {city} = {count++}" );
-            }
-            else
-            {
-                int count = 0;
-                Console.WriteLine("Search Record by State");
-                Console.WriteLine("Enter State Name:-");
-                string state = Console.ReadLine();
+                // If contact name matches exactly then it returns the index of that contact
+                if ((contact.FirstName + " " + contact.LastName).Equals(name))
+                    return contact;
 
-                for (int i = 0; i < list.Count; i++)   //Cheack record present or not
+                // If a part of contact name matches then we would ask them to enter accurately
+                if ((contact.FirstName + " " + contact.LastName).Contains(name))
                 {
-                    if (list[i].State.Equals(state))  //Cheack list of record and user inpute same or not
-                    {
-                        count++;
-                        Console.WriteLine($"Name:- { list[i].FirstName} State:- { list[i].State} ");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{state} State Name of Record Not Found "); //Print Record not found
-                    }
+
+                    // num of 
+                    numOfConatctsWithNameSearched++;
+                    Console.WriteLine($"{contact.FirstName} Name Record is Present");
                 }
-                Console.WriteLine($"\nNumber of contact in the State:- {state} are {count}");
+
+                // If string is not part of any name then exit
+                if (numOfContactsSearched == contactList.Count() && numOfConatctsWithNameSearched == 0)
+                    return null;
             }
+
+            // Ask to enter name accurately
+            Console.Write("\nEnter First Name  and Last Name:- ");
+            name = Console.ReadLine();
+
+            //// To exit
+            //if (name.ToLower() == "e")
+            //   return null;
+
+            return SearchByName(name); //continue search with new name
         }
 
     }
